@@ -1,0 +1,19 @@
+<html>
+<body>
+  <p class="navbar-text navbar-right">
+{% if session.profile %}
+  <a href="/logout">
+    {% if session.profile.picture %}
+      <img class="img-circle" src="{{session.profile.picture}}" width="24">
+    {% endif %}
+    {{session.profile.name}}
+  </a>
+{% else %}
+  <a href="/oauth2authorize">Login</a>
+{% endif %}
+</p>
+{% for o in maillist %}
+    <p>{{o}}</p>
+{% endfor %}
+</body>
+</html>
