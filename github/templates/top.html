@@ -1,0 +1,13 @@
+<html>
+<body>
+  <p class="navbar-text navbar-right">
+{% if session.profile %}
+  <a href="/logout">logout</a>
+{% else %}
+  <a href="/login">Login</a>
+{% endif %}
+</p>
+<p><a href="/user">user</a></p>
+<p><a href="/repo">repo</a></p>
+</body>
+</html>
