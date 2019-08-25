@@ -1,7 +1,7 @@
 from flask import Flask
 import json
 import logging
-
+import base64
 from flask import current_app, Flask, redirect, request, session, url_for, render_template
 import httplib2
 # [START include]
@@ -11,7 +11,7 @@ oauth2 = UserOAuth2()
 app = Flask(__name__)
 with open('client_secret.json') as f:
     df = json.load(f)
-    app.config['SECRET_KEY'] = 'secret'
+    app.config['SECRET_KEY'] = 'secret1'
     app.config['GOOGLE_OAUTH2_CLIENT_ID'] = df['web']['client_id']
     app.config['GOOGLE_OAUTH2_CLIENT_SECRET'] = df['web']['client_secret']
 
@@ -53,9 +53,15 @@ def logout():
     return render_template('top.html')
 
 def _request_user_info(credentials):
-    print('**********************_request_user_info start')
+    print('**********************_request_user_info start1')
     print(dir(credentials))
     print('**********************_request_user_info start2')
+    print(credentials.id_token_jwt)
+    idtoken = credentials.id_token_jwt.split('.')
+    print(json.loads(base64.b64decode(idtoken[0] + '=' * (-len(idtoken[0]) % 4)).decode()))
+    print('**********************_request_user_info start3')
+    print(json.loads(base64.b64decode(idtoken[1] + '=' * (-len(idtoken[1]) % 4)).decode()))
+    print('**********************_request_user_info start4')
     print(credentials.access_token)
     print('**********************_request_user_info end')
     """
@@ -73,7 +79,11 @@ def _request_user_info(credentials):
             "Error while obtaining user profile: \n%s: %s", resp, content)
         return None
     session['profile'] = json.loads(content.decode('utf-8'))
+    print('profile')
+    print(session['profile'])
     session['access_token'] = credentials.access_token
+    print('token')
+    print(session['access_token'])
     print(content.decode('utf-8'))
 
 oauth2.init_app(
