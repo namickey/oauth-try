@@ -22,7 +22,7 @@
       </div>
       <div class="navbar-nav">
         <span class="navbar-text"><n:write name="userContext.name"/></span>
-        {% if session.profile %}
+        {% if session.login %}
           <a class="nav-item nav-link active" href="/logout">Logout</a>
         {% else %}
           <a class="nav-item nav-link active" href="/login">Login</a>
