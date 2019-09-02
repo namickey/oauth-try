@@ -34,7 +34,6 @@ def logout():
 
 @app.route('/oauthgithub')
 def oauthgithub():
-    print('oauthgithub called.')
     code = request.args.get('code')
     state = request.args['state'].encode('utf-8')
     http = httplib2.Http()
@@ -44,21 +43,11 @@ def oauthgithub():
                        headers={'Content-type': 'application/x-www-form-urlencoded'},
                        body=urllib.parse.urlencode(body))
     token = str(content).split('&')[0].split('=')[1]
-    print(resp)
-    print(content)
-    print('token')
-    print(token)
     session['token'] = token
     resp, content = http.request('https://api.github.com/user',
                         headers={'Authorization': 'token ' + token})
     aa = json.loads(content.decode('utf-8'))
     session['login'] = aa['login']
-    resp, content = http.request('https://api.github.com/users/'+ aa['login'] +'/repos',
-                        headers={'Authorization': 'token ' + token})
-    aa = json.loads(content.decode('utf-8'))
-    for x in aa:
-        print(x['name'])
-
     session['profile'] = 'aa'
     return redirect('/')
 
@@ -68,10 +57,8 @@ def user():
     token = session['token']
     resp, content = http.request('https://api.github.com/users/'+session['login'],
                         headers={'Authorization': 'token ' + token})
-    print(resp)
-    aa = json.loads(content.decode('utf-8'))
-    print(aa)
-    return render_template('top.html')
+    userInfo = json.loads(content.decode('utf-8'))
+    return render_template('user.html', userInfo=userInfo)
 
 @app.route('/repo')
 def token1():
@@ -79,11 +66,11 @@ def token1():
     token = session['token']
     resp, content = http.request('https://api.github.com/users/'+session['login']+'/repos',
                         headers={'Authorization': 'token ' + token})
-    print(resp)
-    aa = json.loads(content.decode('utf-8'))
-    for x in aa:
-        print(x['name'])
-    return render_template('top.html')
+    repoList = json.loads(content.decode('utf-8'))
+    #repos = []
+    #for x in repoList:
+    #    repos.append(x['name'])
+    return render_template('repo.html', repos=[x['name'] for x in repoList])
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080)

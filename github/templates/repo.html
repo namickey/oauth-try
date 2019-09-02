@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="container">
+{% for repo in repos %}
+    <div class="row">
+        <div class="col">{{repo}}</div>
+  </div>
+{% endfor %}
+</div>
+
+{% endblock %}

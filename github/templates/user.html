@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+<div class="container">
+{% for key, value in userInfo.items() recursive %}
+    <div class="row">
+    {% if value is string %}
+        <div class="col">{{key}}</div>
+        <div class="col">{{value}}</div>
+    {% endif %}
+  </div>
+{% endfor %}
+</div>
+
+{% endblock %}
